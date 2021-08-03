@@ -1,7 +1,58 @@
-<!DOCTYPE html>
 <html>
-<body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
-</body>
+	<head>		
+		<title>Flickr Photo Stream - Kate Arnold</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<style>
+			body {font-family:Lato, sans-serif;margin:16px;font-size:14px;}
+			*, *:before, *:after {box-sizing:border-box;}
+			#wrapper {width:2000px;max-width:100%;margin:16px auto;}
+			#flickr {display:grid;grid-gap:16px;grid-template-columns:repeat(1, 1fr);}
+			@media (min-width:480px) {
+				#flickr {grid-template-columns:repeat(2, 1fr);}
+			}
+			@media (min-width:768px) {
+				#flickr {grid-template-columns:repeat(3, 1fr);}
+			}
+			@media (min-width:1024px) {
+				#flickr {grid-template-columns:repeat(4, 1fr);}
+				.title, .owner {display:inline-block;}
+				.owner:before {content:'\00a0\00a0';}
+			}
+			@media (min-width:1600px) {
+				#flickr {grid-template-columns:repeat(5, 1fr);}
+			}
+			.image {height:0;padding-top:66.6666%;background:#eeeeee;position:relative;overflow:hidden;}
+			img {width:100%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}
+			.title {font-weight:bold;font-size:16px;}
+			.details {margin:8px 0 16px;}
+			.details > div {margin-top:8px;}
+			a {color:#000;}
+		</style>
+		<script>
+			var settings = {
+			  "async": true,
+			  "crossDomain": true,
+			  "url": "https://api.flickr.com/services/rest/?method=flickr.galleries.getPhotos&api_key=e682e046fa5968ade7ac0b42e5e2e95f&gallery_id=72157718793456406&extras=owner_name,description,tags&format=json&nojsoncallback=1&safe_search=1",
+			  "method": "GET",
+			  "headers": {}
+			}
+
+			$.ajax(settings).done(function (data) {
+				$.each( data.photos.photo, function( i, gp ) {
+					$("#flickr").append('<div><div class="image"><img src="https://farm' + gp.farm + '.staticflickr.com/' + gp.server + '/' + gp.id + '_' + gp.secret + '.jpg"/></div><div class="details"><div class="title"><a href="https://www.flickr.com/photos/' + gp.owner + '/' + gp.id + '/">' + gp.title + '</a></div><div class="owner">by <a href="https://www.flickr.com/photos/' + gp.owner + '/">' + gp.ownername + '</a></div><div class="desc">Description: ' + gp.description._content + '</div><div class="tags">Tags: ' + gp.tags + '</div></div></div>');
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="wrapper">
+			<h1>Kate Arnold's Flickr Photo Stream</h1>
+			<div id="flickr"></div>
+		</div>
+	</body>
 </html>
